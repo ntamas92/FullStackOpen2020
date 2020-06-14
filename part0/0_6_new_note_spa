@@ -1,0 +1,11 @@
+title Post new note with SPA
+
+note over browser: User fills out form, hits save
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+server->browser: HTTP 201
+
+note over browser:
+Browser adds the new note locally, 
+do not reload the whole page
+end note
