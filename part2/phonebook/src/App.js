@@ -1,40 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Filter from "./components/filter";
 import PersonForm from "./components/personForm";
-import Persons from "./components/persons";
+import RenderPersons from "./components/persons";
+import phoneBookService from "./services/phoneBookAccess";
+import Notification from "./components/notification";
 
-const defaultPersons = [
-  { name: "Arto Hellas", number: "040-123456" },
-  { name: "Ada Lovelace", number: "39-44-5323523" },
-  { name: "Dan Abramov", number: "12-43-234345" },
-  { name: "Mary Poppendieck", number: "39-23-6423122" },
-];
+const defaultNotificationMessage = { message: null, isError: false }
 
 const App = () => {
-  const [persons, setPersons] = useState(defaultPersons);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterText, setFilterText] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(defaultNotificationMessage);
+
+  const notifyUser = (message, isError) => {
+    setNotificationMessage({message, isError})
+    setTimeout(() => {
+      setNotificationMessage(defaultNotificationMessage)
+    }, 5000)
+  }
+
+  useEffect(() => {
+    phoneBookService.getAll().then((x) => setPersons(x));
+  }, []);
 
   const addNewName = (event) => {
     event.preventDefault();
-    if (persons.findIndex((x) => x.name === newName) !== -1) {
-      alert(`${newName} is already added to the phonebook`);
+
+    const existingPerson = persons.find((x) => x.name === newName);
+    if (existingPerson !== undefined) {
+      updateExistingEntryIfNecessary(existingPerson);
       return;
     }
 
     const newPerson = { name: newName, number: newNumber };
-    setPersons(persons.concat(newPerson));
+    phoneBookService.addPhoneEntry(newPerson).then((x) => {
+      setPersons(persons.concat(x));
+      notifyUser(`Added ${newPerson.name}`, false);
+    });
+  };
+
+  const removePersonHandler = (personToDelete) => {
+    phoneBookService.removePhoneEntry(personToDelete.id).then((x) => {
+      setPersons(persons.filter((x) => x.name !== personToDelete.name));
+      notifyUser(`Removed ${personToDelete.name}`, false);
+    });
+  };
+
+  const updateExistingEntryIfNecessary = (existingEntry) => {
+    const shallUpdate = window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`);
+
+    if (shallUpdate) {
+      const updatedPerson = { ...existingEntry, number: newNumber };
+      phoneBookService
+        .updatePhoneEntry(existingEntry.id, updatedPerson)
+        .then(() => {
+          setPersons(persons.map((x) => (x.id !== updatedPerson.id ? x : updatedPerson)));
+          notifyUser(`Updated ${existingEntry.name}'s phone number.`, false);
+        })
+        .catch((error) => {
+          notifyUser(`Error happened: ${error}`, true);
+        });
+    }
+    return;
   };
 
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification {...notificationMessage} />
 
-      <Filter
-        filterText={filterText}
-        onFilterChange={(event) => setFilterText(event.target.value)}
-      />
+      <Filter filterText={filterText} onFilterChange={(event) => setFilterText(event.target.value)} />
 
       <h3>Add a new</h3>
       <PersonForm
@@ -46,7 +83,7 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons persons={persons} filterText={filterText} />
+      <RenderPersons persons={persons} filterText={filterText} deletionHandler={removePersonHandler} />
     </div>
   );
 };
