@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const uri = "http://localhost:3001/persons";
+const uri = "/api/persons";
 
 const getAll = () => {
   var responsePromise = axios.get(uri).then((x) => x.data);
