@@ -14,7 +14,7 @@ const AnecdoteList = () => {
   const vote = (anecdote) => () => {
     dispatch(voteAction(anecdote))
 
-    setExpiringNotificationMessage(`You voted ${anecdote.content}`, dispatch)
+    dispatch(setExpiringNotificationMessage(`You voted ${anecdote.content}`, 5000))
   } 
 
   return (

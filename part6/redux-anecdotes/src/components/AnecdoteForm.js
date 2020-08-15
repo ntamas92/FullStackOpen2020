@@ -8,7 +8,7 @@ const AnecdoteForm = () => {
     event.preventDefault()
     dispatch(createNewAnecdote(newAnecdote))
 
-    setExpiringNotificationMessage(`${newAnecdote} created`, dispatch)
+    dispatch(setExpiringNotificationMessage(`${newAnecdote} created`, 5000))
     setNewAnecdote("")
   }
 
