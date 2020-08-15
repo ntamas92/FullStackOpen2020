@@ -1,4 +1,4 @@
-const initialState = "debug"
+const initialState = ""
 
 const reducer = (state = initialState, action) => {
     if(action.type === "SET_FILTER") {

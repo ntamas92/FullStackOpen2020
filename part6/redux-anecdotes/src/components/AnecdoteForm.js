@@ -2,12 +2,15 @@ import React, { useState } from "react"
 import { useDispatch } from "react-redux"
 import { createNewAnecdoteAction } from "../reducers/anecdoteReducer"
 import { setExpiringNotificationMessage } from "../reducers/notificationReducer"
+import anecdoteService from "../services/anectodes"
 
 const AnecdoteForm = () => {
-  const handleCreateNewAnecdote = event => {
+  const handleCreateNewAnecdote = async event => {
     event.preventDefault()
-    dispatch(createNewAnecdoteAction(newAnecdote))
-    
+
+    const createdAnecdote = await anecdoteService.createNew(newAnecdote)
+    dispatch(createNewAnecdoteAction(createdAnecdote))
+
     setExpiringNotificationMessage(`${newAnecdote} created`, dispatch)
     setNewAnecdote("")
   }
