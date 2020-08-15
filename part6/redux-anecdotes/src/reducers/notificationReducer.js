@@ -22,4 +22,9 @@ export const clearNotificationMessageAction = {
     type: "CLEAR",
 }
 
+export const setExpiringNotificationMessage = (message, dispatch) => {
+  dispatch(setNotificationMessageAction(message))
+  setTimeout(() => dispatch(clearNotificationMessageAction), 5000)
+}
+
 export default reducer

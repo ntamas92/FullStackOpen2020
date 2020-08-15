@@ -1,14 +1,14 @@
 import React, { useState } from "react"
 import { useDispatch } from "react-redux"
 import { createNewAnecdoteAction } from "../reducers/anecdoteReducer"
-import { setNotificationMessageAction, clearNotificationMessageAction } from "../reducers/notificationReducer"
+import { setExpiringNotificationMessage } from "../reducers/notificationReducer"
 
 const AnecdoteForm = () => {
   const handleCreateNewAnecdote = event => {
     event.preventDefault()
     dispatch(createNewAnecdoteAction(newAnecdote))
-    dispatch(setNotificationMessageAction(`${newAnecdote} created`))
-    setTimeout(() => dispatch(clearNotificationMessageAction), 5000)
+    
+    setExpiringNotificationMessage(`${newAnecdote} created`, dispatch)
     setNewAnecdote("")
   }
 
