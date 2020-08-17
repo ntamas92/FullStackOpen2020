@@ -1,21 +1,32 @@
 import React from "react"
-import { voteAction } from "../reducers/anecdoteReducer"
-import { setExpiringNotificationMessage } from "../reducers/notificationReducer"
+import { connect } from "react-redux"
 
-import { useSelector, useDispatch } from "react-redux"
+// import { voteAction } from "../reducers/anecdoteReducer"
+// import { setExpiringNotificationMessage } from "../reducers/notificationReducer"
 
-const AnecdoteList = () => {
-  const anecdotes = useSelector(state => state.anecdotes)
-  const filter = useSelector(state => state.filter)
+// import { useSelector, useDispatch } from "react-redux"
+
+const mapStateToProps = state => {
+  return {
+    anecdotes: state.anecdotes,
+    filter: state.filter,
+  }
+}
+
+const AnecdoteList = props => {
+  const anecdotes = props.anecdotes
+  const filter = props.filter
+
+  // const anecdotes = useSelector(state => state.anecdotes)
+  // const filter = useSelector(state => state.filter)
 
   const filteredAnecdotes = anecdotes.filter(x => x.content.toLowerCase().includes(filter))
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
-  const vote = (anecdote) => () => {
-    dispatch(voteAction(anecdote))
-
-    dispatch(setExpiringNotificationMessage(`You voted ${anecdote.content}`, 5000))
-  } 
+  const vote = anecdote => () => {
+    // dispatch(voteAction(anecdote))
+    // dispatch(setExpiringNotificationMessage(`You voted ${anecdote.content}`, 5000))
+  }
 
   return (
     <div className="anecdote-list">
@@ -34,4 +45,5 @@ const AnecdoteList = () => {
   )
 }
 
-export default AnecdoteList
+const connectedAnecdoteList = connect(mapStateToProps)(AnecdoteList)
+export default connectedAnecdoteList
