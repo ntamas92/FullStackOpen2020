@@ -1,4 +1,5 @@
 const initialState = null
+let currentTimeoutId = null
 
 const reducer = (state = initialState, action) => {
   if (action.type === "SET_MESSAGE") {
@@ -23,8 +24,16 @@ export const clearNotificationMessageAction = {
 }
 
 export const setExpiringNotificationMessage = (message, timeout) => async (dispatch) => {
+  if(currentTimeoutId){
+    clearTimeout(currentTimeoutId)
+  }
+
   dispatch(setNotificationMessageAction(message))
-  setTimeout(() => dispatch(clearNotificationMessageAction), timeout)
+
+  await new Promise(resolve => currentTimeoutId = setTimeout(resolve, timeout))
+  
+  dispatch(clearNotificationMessageAction)
+  currentTimeoutId = null
 }
 
 export default reducer
