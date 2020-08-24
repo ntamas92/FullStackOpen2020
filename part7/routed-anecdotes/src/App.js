@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Switch, Route, Link, useHistory, useParams, useRouteMatch } from "react-router-dom"
+import { Switch, Route, Link, useHistory, useRouteMatch } from "react-router-dom"
 import About from "./components/About"
 import AnecdoteList from "./components/AnecdoteList"
 import CreateNew from "./components/AnecdoteCreateForm"

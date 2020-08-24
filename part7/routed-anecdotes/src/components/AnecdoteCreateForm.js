@@ -1,18 +1,28 @@
-import React, { useState } from "react"
+import React from "react"
+import { useField } from "../hooks/useField"
 
 const CreateNew = props => {
-  const [content, setContent] = useState("")
-  const [author, setAuthor] = useState("")
-  const [info, setInfo] = useState("")
+  //An alternative way of stripping down the reset method from useField is to 
+  //export the properties of useField as is, and import them like the following:
+  //const { reset: contentReset, ...content } = useField("text")
+  const [content, contentReset] = useField("text")
+  const [author, authorReset] = useField("text")
+  const [info, infoReset] = useField("text")
 
   const handleSubmit = e => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     })
+  }
+
+  const resetFields = e => {
+    contentReset()
+    authorReset()
+    infoReset()
   }
 
   return (
@@ -21,17 +31,20 @@ const CreateNew = props => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name="content" value={content} onChange={e => setContent(e.target.value)} />
+          <input {...content} />
         </div>
         <div>
           author
-          <input name="author" value={author} onChange={e => setAuthor(e.target.value)} />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input name="info" value={info} onChange={e => setInfo(e.target.value)} />
+          <input {...info} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="button" onClick={resetFields}>
+          reset
+        </button>
       </form>
     </div>
   )
