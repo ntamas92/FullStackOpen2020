@@ -1,47 +1,44 @@
 {
-  "name": "bloglist-frontend",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/user-event": "^7.2.1",
-    "axios": "^0.19.2",
-    "prop-types": "^15.7.2",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "3.4.1"
-  },
+  "name": "fullstackopen2020-bloglist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "eslint": "eslint .",
-    "cypress:open": "cypress open"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "jest --verbose",
+    "start:test": "cross-env NODE_ENV=test node index.js"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ntamas92/FullstackOpen2020-bloglist.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ntamas92/FullstackOpen2020-bloglist/issues"
   },
-  "proxy": "http://localhost:3001",
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "homepage": "https://github.com/ntamas92/FullstackOpen2020-bloglist#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "http": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.19",
+    "mongoose": "^5.9.25",
+    "mongoose-unique-validator": "^2.0.3"
+  },
   "devDependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "cypress": "^4.12.1",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-cypress": "^2.11.1",
-    "eslint-plugin-jest": "^23.20.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "prettier": "^2.0.5"
+    "cross-env": "^7.0.2",
+    "jest": "^26.1.0",
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
   }
 }
