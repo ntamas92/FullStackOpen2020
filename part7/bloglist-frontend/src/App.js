@@ -9,13 +9,15 @@ import Togglable from "./components/utils/Togglable";
 import "./App.css";
 
 import { setExpiringMessage } from "./state/notification/notificationActions"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import blogsActions from "./state/blogs/blogsActions"
 
 const App = () => {
-  const [user, setUser] = useState(null);
-  const [blogs, setBlogs] = useState([]);
-
   const dispatch = useDispatch()
+  const [user, setUser] = useState(null);
+
+  const blogs = useSelector(store => store.blogs)
 
   const newBlogRef = useRef();
 
@@ -30,7 +32,7 @@ const App = () => {
   useEffect(() => {
     if (user) {
       blogService.getAll(user.token).then((blogs) => {
-        setBlogs(blogs);
+        dispatch(blogsActions.setBlogs(blogs));
       });
     }
   }, [user]);
@@ -58,19 +60,19 @@ const App = () => {
 
   const handleAddNewBlog = async (blogDetails) => {
     const result = await blogService.addNewBlog(blogDetails, user.token);
-    setBlogs(blogs.concat(result));
+    dispatch(blogsActions.addBlog(result));
     showNotification("Blog added", notificationType.INFO);
     newBlogRef.current.toggleVisibility();
   };
 
   const handleLikeClicked = async (blog) => {
     const updatedBlog = await blogService.incrementLikes(blog, user.token);
-    setBlogs(blogs.map((x) => (x.id !== updatedBlog.id ? x : updatedBlog)));
+    dispatch(blogsActions.modifyBlog(updatedBlog));
   };
 
   const handleRemoveBlog = async (blog) => {
     await blogService.removeBlog(blog, user.token);
-    setBlogs(blogs.filter((x) => x !== blog));
+    dispatch(blogsActions.removeBlog(blog));
   };
 
   const showNotification = (message, notificationType) => {

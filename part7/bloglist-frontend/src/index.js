@@ -5,8 +5,11 @@ import createStore from "./state/store"
 import { Provider } from "react-redux"
 import { combineReducers } from "redux"
 import notificationReducer from "./state/notification/nofiticationReducer"
+import blogsReducer from "./state/blogs/blogsReducer"
 
-const store = createStore(combineReducers({ notification: notificationReducer }))
+const combinedReducers = combineReducers({ notification: notificationReducer, blogs: blogsReducer })
+
+const store = createStore(combinedReducers)
 
 ReactDOM.render(
   <Provider store={store}>
