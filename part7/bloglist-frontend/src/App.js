@@ -4,16 +4,18 @@ import Login from "./components/Login";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import AddNewBlog from "./components/AddNewBlog";
-import Notification from "./components/Notification";
+import Notification, { notificationType } from "./components/Notification";
 import Togglable from "./components/utils/Togglable";
 import "./App.css";
 
-const defaultNotification = { message: null, isError: null };
+import { setExpiringMessage } from "./state/notification/notificationActions"
+import { useDispatch } from "react-redux";
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
-  const [notification, setNotification] = useState(defaultNotification);
+
+  const dispatch = useDispatch()
 
   const newBlogRef = useRef();
 
@@ -38,14 +40,14 @@ const App = () => {
     try {
       credentials = await loginService.login({ username, password });
     } catch (error) {
-      showNotification(`Error during login: ${error}`, true);
+      showNotification(`Error during login: ${error}`, notificationType.ERROR);
       return;
     }
 
     if (credentials) {
       window.localStorage.setItem("loggedInUser", JSON.stringify(credentials));
       setUser(credentials);
-      showNotification("User logged in", false);
+      showNotification("User logged in", notificationType.INFO);
     }
   };
 
@@ -57,7 +59,7 @@ const App = () => {
   const handleAddNewBlog = async (blogDetails) => {
     const result = await blogService.addNewBlog(blogDetails, user.token);
     setBlogs(blogs.concat(result));
-    showNotification("Blog added", false);
+    showNotification("Blog added", notificationType.INFO);
     newBlogRef.current.toggleVisibility();
   };
 
@@ -71,26 +73,25 @@ const App = () => {
     setBlogs(blogs.filter((x) => x !== blog));
   };
 
-  const showNotification = (message, isError) => {
-    setNotification({ message, isError });
-    setTimeout(() => setNotification(defaultNotification), 5000);
+  const showNotification = (message, notificationType) => {
+    dispatch(setExpiringMessage({ message, notificationType }, 5000))
   };
 
   return (
     <div>
-      <Notification {...notification} />
+      <Notification />
 
       <h2>login</h2>
       {user === null ? (
         <Login handleLogin={handleLogin} />
       ) : (
-        <div>
-          <p>{user.name} logged in</p>
-          <button type="button" onClick={handleLogout}>
-            logout
+          <div>
+            <p>{user.name} logged in</p>
+            <button type="button" onClick={handleLogout}>
+              logout
           </button>
-        </div>
-      )}
+          </div>
+        )}
 
       {user && (
         <>

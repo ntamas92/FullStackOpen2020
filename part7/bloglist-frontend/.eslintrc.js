@@ -8,7 +8,7 @@ module.exports = {
     "extends": [ 
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:cypress/recommended"
+        "plugin:cypress/recommended",
         // "prettier",
     ],
     "parserOptions": {
@@ -46,6 +46,7 @@ module.exports = {
             "error", { "before": true, "after": true }
         ],
         "no-console": 0,
-        "react/prop-types": 0
+        "react/prop-types": 0,
+        "nonblock-statement-body-position": ["error", "below"]
     }
   }
