@@ -24,10 +24,10 @@ module.exports = {
         // "prettier"
     ],
     "rules": {
-        "indent": [
-            "error",
-            2  
-        ],
+        // "indent": [
+        //     "error",
+        //     2  
+        // ],
         // "linebreak-style": [
         //     "error",
         //     "windows"
