@@ -11,13 +11,11 @@ import AddNewBlog from "./components/AddNewBlog";
 import Togglable from "./components/utils/Togglable";
 import Notification, { notificationType } from "./components/Notification";
 
-import blogService from "./services/blogs";
+import blogsActions from "./state/blogs/blogsActions"
 
 import { setExpiringMessage } from "./state/notification/notificationActions"
-import blogsActions from "./state/blogs/blogsActions"
+
 import userActions from "./state/user/userActions"
-
-
 
 const App = () => {
   const dispatch = useDispatch()
@@ -31,19 +29,11 @@ const App = () => {
     const storedUser = window.localStorage.getItem("loggedInUser");
     console.log("storeduser", storedUser)
     if (storedUser) {
-
       dispatch(userActions.setUser(JSON.parse(storedUser)))
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    if (user) {
-      blogService.getAll(user.token).then((blogs) => {
-        dispatch(blogsActions.setBlogs(blogs));
-      });
-    }
-  }, [user, dispatch]);
-
+  useEffect(() => { dispatch(blogsActions.initializeBlogs()) }, [user, dispatch]);
 
   const handleLogout = () => {
     window.localStorage.clear();
@@ -51,20 +41,9 @@ const App = () => {
   };
 
   const handleAddNewBlog = async (blogDetails) => {
-    const result = await blogService.addNewBlog(blogDetails, user.token);
-    dispatch(blogsActions.addBlog(result));
+    dispatch(blogsActions.addBlog(blogDetails));
     showNotification("Blog added", notificationType.INFO);
     newBlogRef.current.toggleVisibility();
-  };
-
-  const handleLikeClicked = async (blog) => {
-    const updatedBlog = await blogService.incrementLikes(blog, user.token);
-    dispatch(blogsActions.modifyBlog(updatedBlog));
-  };
-
-  const handleRemoveBlog = async (blog) => {
-    await blogService.removeBlog(blog, user.token);
-    dispatch(blogsActions.removeBlog(blog));
   };
 
   const showNotification = (message, notificationType) => {
@@ -100,13 +79,11 @@ const App = () => {
                 <AddNewBlog submitNewBlog={handleAddNewBlog} />
               </Togglable>
 
-              <h2>blogs</h2>
+              <h2>Blogs</h2>
               {blogs
                 .filter((blog) => blog)
                 .sort((a, b) => b.likes - a.likes)
-                .map((blog) => (
-                  <Blog key={blog.id} blog={blog} handleLikeClicked={handleLikeClicked} handleRemoveBlog={handleRemoveBlog} />
-                ))}
+                .map((blog) => <Blog key={blog.id} blog={blog} />)}
             </>
           )}
         </Route>

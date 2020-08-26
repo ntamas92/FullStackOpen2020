@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux"
+
+import blogsActions from "../state/blogs/blogsActions"
 
 const blogStyle = {
   paddingTop: 10,
@@ -30,8 +33,18 @@ const detailedView = (blog, handleLikeClicked, handleRemoveBlog) => (
   </div>
 );
 
-const Blog = ({ blog, handleLikeClicked, handleRemoveBlog }) => {
+const Blog = ({ blog }) => {
   const [showDetailedView, setShowDetailedView] = useState(false);
+
+  const dispatch = useDispatch()
+
+  const handleLikeClicked = async () => {
+     dispatch(blogsActions.incrementLikesOnBlog());
+  };
+
+  const handleRemoveBlog = async (blog) => {
+    dispatch(blogsActions.removeBlog(blog));
+  };
 
   return (
     <div data-cy="blogContainer" className="blog" style={blogStyle}>
