@@ -1,13 +1,27 @@
 import React, { useState } from "react";
 
+import { setExpiringMessage } from "../state/notification/notificationActions"
+import { notificationType } from "./Notification";
+import { useDispatch } from "react-redux";
+
+import blogsActions from "../state/blogs/blogsActions"
+
 const defaultBlogDetails = { title: "", author: "", url: "" };
 
-const AddNewBlog = ({ submitNewBlog }) => {
+const AddNewBlog = ({ newBlogToggleRef }) => {
+  const dispatch = useDispatch()
+
   const handleAddNewBlog = (event) => {
     event.preventDefault();
-    submitNewBlog(blogDetails);
+    dispatch(blogsActions.addBlog(blogDetails));
+    showNotification("Blog added", notificationType.INFO);
+    newBlogToggleRef.current.toggleVisibility();
     console.log(blogDetails);
     setBlogDetails(defaultBlogDetails);
+  };
+
+  const showNotification = (message, notificationType) => {
+    dispatch(setExpiringMessage({ message, notificationType }, 5000))
   };
 
   const [blogDetails, setBlogDetails] = useState(defaultBlogDetails);
