@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import Login from "./components/Login";
 import blogService from "./services/blogs";
@@ -12,22 +12,22 @@ import { setExpiringMessage } from "./state/notification/notificationActions"
 import { useDispatch, useSelector } from "react-redux";
 
 import blogsActions from "./state/blogs/blogsActions"
+import userActions from "./state/user/userActions"
 
 const App = () => {
   const dispatch = useDispatch()
-  const [user, setUser] = useState(null);
 
   const blogs = useSelector(store => store.blogs)
+  const user = useSelector(store => store.user)
 
   const newBlogRef = useRef();
 
   useEffect(() => {
     const storedUser = window.localStorage.getItem("loggedInUser");
     if (storedUser) {
-      console.log(storedUser);
-      setUser(JSON.parse(storedUser));
+      dispatch(userActions.setUser(JSON.parse(storedUser)))
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (user) {
@@ -35,7 +35,7 @@ const App = () => {
         dispatch(blogsActions.setBlogs(blogs));
       });
     }
-  }, [user]);
+  }, [user, dispatch]);
 
   const handleLogin = async ({ username, password }) => {
     let credentials;
@@ -48,14 +48,14 @@ const App = () => {
 
     if (credentials) {
       window.localStorage.setItem("loggedInUser", JSON.stringify(credentials));
-      setUser(credentials);
+      dispatch(userActions.setUser(credentials))
       showNotification("User logged in", notificationType.INFO);
     }
   };
 
   const handleLogout = () => {
     window.localStorage.clear();
-    setUser(null);
+    dispatch(userActions.setUser(null))
   };
 
   const handleAddNewBlog = async (blogDetails) => {
