@@ -1,18 +1,39 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
+import loginService from "../services/login"
+import { useDispatch } from "react-redux";
 
-const Login = ({ handleLogin }) => {
-  Login.propTypes = {
-    handleLogin: PropTypes.func.isRequired,
-  };
+import { setExpiringMessage } from "../state/notification/notificationActions"
+import userActions from "../state/user/userActions"
+import { notificationType } from "./Notification";
 
+
+
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const dispatch = useDispatch()
+
   const handleLoginEvent = async (event) => {
     event.preventDefault();
-    handleLogin({ username, password });
+    let credentials;
+    try {
+      credentials = await loginService.login({ username, password });
+    } catch (error) {
+      showNotification(`Error during login: ${error}`, notificationType.ERROR);
+      return;
+    }
+
+    if (credentials) {
+      window.localStorage.setItem("loggedInUser", JSON.stringify(credentials));
+      dispatch(userActions.setUser(credentials))
+      showNotification("User logged in", notificationType.INFO);
+    }
   };
+
+  const showNotification = (message, notificationType) => {
+    dispatch(setExpiringMessage({ message, notificationType }, 5000))
+  }
 
   return (
     <div>

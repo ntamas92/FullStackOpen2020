@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import Login from "./components/Login";
 import blogService from "./services/blogs";
-import loginService from "./services/login";
 import AddNewBlog from "./components/AddNewBlog";
 import Notification, { notificationType } from "./components/Notification";
 import Togglable from "./components/utils/Togglable";
@@ -37,21 +36,6 @@ const App = () => {
     }
   }, [user, dispatch]);
 
-  const handleLogin = async ({ username, password }) => {
-    let credentials;
-    try {
-      credentials = await loginService.login({ username, password });
-    } catch (error) {
-      showNotification(`Error during login: ${error}`, notificationType.ERROR);
-      return;
-    }
-
-    if (credentials) {
-      window.localStorage.setItem("loggedInUser", JSON.stringify(credentials));
-      dispatch(userActions.setUser(credentials))
-      showNotification("User logged in", notificationType.INFO);
-    }
-  };
 
   const handleLogout = () => {
     window.localStorage.clear();
@@ -85,7 +69,7 @@ const App = () => {
 
       <h2>login</h2>
       {user === null ? (
-        <Login handleLogin={handleLogin} />
+        <Login />
       ) : (
           <div>
             <p>{user.name} logged in</p>
