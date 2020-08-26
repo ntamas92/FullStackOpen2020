@@ -12,6 +12,7 @@ import Togglable from "./components/utils/Togglable";
 import Notification from "./components/Notification";
 
 import blogsActions from "./state/blogs/blogsActions"
+import usersActions from "./state/users/usersActions";
 
 const App = () => {
   const dispatch = useDispatch()
@@ -24,6 +25,7 @@ const App = () => {
   useEffect(() => {
     if (user) {
       dispatch(blogsActions.initializeBlogs())
+      dispatch(usersActions.initializeUsers())
     }
   }, [user, dispatch]);
 
@@ -37,6 +39,7 @@ const App = () => {
       {user && (
         <Switch>
           <Route path="/users">
+            <h2>Users</h2>
             <Users />
           </Route>
 
