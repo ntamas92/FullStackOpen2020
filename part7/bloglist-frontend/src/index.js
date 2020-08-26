@@ -4,7 +4,7 @@ import App from "./App"
 import createStore from "./state/store"
 import { Provider } from "react-redux"
 import { combineReducers } from "redux"
-import notificationReducer from "./state/reducers/nofiticationReducer"
+import notificationReducer from "./state/notification/nofiticationReducer"
 
 const store = createStore(combineReducers({ notification: notificationReducer }))
 
