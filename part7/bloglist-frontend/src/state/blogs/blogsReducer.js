@@ -8,18 +8,17 @@ export const blogActionTypes = {
 }
 
 const blogsReducer = (state = initialState, action) => {
-  console.log("blogs action", action)
-
-  if(action.type === blogActionTypes.SET_BLOGS)
-    return action.data
-  else if(action.type === blogActionTypes.ADD_BLOG)
-    return state.concat(action.data)
-  else if(action.type === blogActionTypes.REMOVE_BLOG)
-    return state.filter(x => x.id !== action.data.id)
-  else if(action.type === blogActionTypes.MODIFY_BLOG)
-    return state.map(x => x.id === action.data.id ? action.data : x)
-
-  return state
+  switch (action.type) {
+    case blogActionTypes.SET_BLOGS:
+      return action.data
+    case blogActionTypes.ADD_BLOG:
+      return state.concat(action.data)
+    case blogActionTypes.REMOVE_BLOG:
+      return state.filter(x => x.id !== action.data.id)
+    case blogActionTypes.MODIFY_BLOG:
+      return state.map(x => x.id === action.data.id ? action.data : x)
+    default: return state
+  }
 }
 
 export default blogsReducer
