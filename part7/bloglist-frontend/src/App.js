@@ -10,6 +10,7 @@ import Users from "./components/Users"
 import AddNewBlog from "./components/AddNewBlog";
 import Togglable from "./components/utils/Togglable";
 import Notification from "./components/Notification";
+import UserDetails from "./components/UserDetails";
 
 import blogsActions from "./state/blogs/blogsActions"
 import usersActions from "./state/users/usersActions";
@@ -38,6 +39,10 @@ const App = () => {
 
       {user && (
         <Switch>
+          <Route path="/users/:id">
+            <h2>User details</h2>
+            <UserDetails />
+          </Route>
           <Route path="/users">
             <h2>Users</h2>
             <Users />
