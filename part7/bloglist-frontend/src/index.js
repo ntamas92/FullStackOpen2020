@@ -7,13 +7,19 @@ import { combineReducers } from "redux"
 import notificationReducer from "./state/notification/nofiticationReducer"
 import blogsReducer from "./state/blogs/blogsReducer"
 import userReducer from "./state/user/userReducer"
+import { BrowserRouter as Router } from "react-router-dom"
 
-const combinedReducers = combineReducers({ notification: notificationReducer, blogs: blogsReducer, user:userReducer })
+const combinedReducers = combineReducers({ notification: notificationReducer, blogs: blogsReducer, user: userReducer })
 
 const store = createStore(combinedReducers)
 
+console.log("index")
+
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <Router>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </Router>
+  ,
   document.getElementById("root"))

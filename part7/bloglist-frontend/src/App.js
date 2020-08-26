@@ -1,17 +1,23 @@
 import React, { useEffect, useRef } from "react";
-import Blog from "./components/Blog";
-import Login from "./components/Login";
-import blogService from "./services/blogs";
-import AddNewBlog from "./components/AddNewBlog";
-import Notification, { notificationType } from "./components/Notification";
-import Togglable from "./components/utils/Togglable";
-import "./App.css";
-
-import { setExpiringMessage } from "./state/notification/notificationActions"
+import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import "./App.css";
+
+import Blog from "./components/Blog";
+import Login from "./components/Login";
+import Users from "./components/Users"
+import AddNewBlog from "./components/AddNewBlog";
+import Togglable from "./components/utils/Togglable";
+import Notification, { notificationType } from "./components/Notification";
+
+import blogService from "./services/blogs";
+
+import { setExpiringMessage } from "./state/notification/notificationActions"
 import blogsActions from "./state/blogs/blogsActions"
 import userActions from "./state/user/userActions"
+
+
 
 const App = () => {
   const dispatch = useDispatch()
@@ -23,7 +29,9 @@ const App = () => {
 
   useEffect(() => {
     const storedUser = window.localStorage.getItem("loggedInUser");
+    console.log("storeduser", storedUser)
     if (storedUser) {
+
       dispatch(userActions.setUser(JSON.parse(storedUser)))
     }
   }, [dispatch]);
@@ -79,22 +87,32 @@ const App = () => {
           </div>
         )}
 
-      {user && (
-        <>
-          <Togglable buttonLabel="new blog" ref={newBlogRef}>
-            <h2>create new</h2>
-            <AddNewBlog submitNewBlog={handleAddNewBlog} />
-          </Togglable>
+      <Switch>
+        <Route path="/users">
+          <Users />
+        </Route>
 
-          <h2>blogs</h2>
-          {blogs
-            .filter((blog) => blog)
-            .sort((a, b) => b.likes - a.likes)
-            .map((blog) => (
-              <Blog key={blog.id} blog={blog} handleLikeClicked={handleLikeClicked} handleRemoveBlog={handleRemoveBlog} />
-            ))}
-        </>
-      )}
+        <Route path="/">
+          {user && (
+            <>
+              <Togglable buttonLabel="new blog" ref={newBlogRef}>
+                <h2>create new</h2>
+                <AddNewBlog submitNewBlog={handleAddNewBlog} />
+              </Togglable>
+
+              <h2>blogs</h2>
+              {blogs
+                .filter((blog) => blog)
+                .sort((a, b) => b.likes - a.likes)
+                .map((blog) => (
+                  <Blog key={blog.id} blog={blog} handleLikeClicked={handleLikeClicked} handleRemoveBlog={handleRemoveBlog} />
+                ))}
+            </>
+          )}
+        </Route>
+      </Switch>
+
+
     </div>
   );
 };
