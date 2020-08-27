@@ -14,6 +14,7 @@ import UserDetails from "./components/UserDetails";
 
 import blogsActions from "./state/blogs/blogsActions"
 import usersActions from "./state/users/usersActions";
+import BlogDetails from "./components/BlogDetails";
 
 const App = () => {
   const dispatch = useDispatch()
@@ -46,6 +47,10 @@ const App = () => {
           <Route path="/users">
             <h2>Users</h2>
             <Users />
+          </Route>
+          <Route path="/blogs/:id">
+            <h2>Blogs</h2>
+            <BlogDetails />
           </Route>
 
           <Route path="/">
