@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import loginService from "../services/login"
 import { useDispatch, useSelector } from "react-redux";
 
@@ -7,18 +7,12 @@ import { useField } from "../hooks/useField"
 import { setExpiringMessage } from "../state/notification/notificationActions"
 import userActions from "../state/user/userActions"
 import { notificationType } from "./Notification";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch()
   const user = useSelector(store => store.user)
-
-  useEffect(() => {
-    const storedUser = window.localStorage.getItem("loggedInUser");
-    console.log("storeduser", storedUser)
-    if (storedUser) {
-      dispatch(userActions.setUser(JSON.parse(storedUser)))
-    }
-  }, [dispatch]);
+  const history = useHistory()
 
   const handleLogin = async (username, password) => {
 
@@ -34,32 +28,18 @@ const Login = () => {
       window.localStorage.setItem("loggedInUser", JSON.stringify(credentials));
       dispatch(userActions.setUser(credentials))
       showNotification("User logged in", notificationType.INFO);
+      history.replace("/")
     }
-  };
-
-  const handleLogout = () => {
-    window.localStorage.clear();
-    dispatch(userActions.setUser(null))
   };
 
   const showNotification = (message, notificationType) => {
     dispatch(setExpiringMessage({ message, notificationType }, 5000))
   }
 
-  return (
-    user ?
-      <LoggedInUserForm user={user} handleLogout={handleLogout} /> :
-      <LoginForm handleLogin={handleLogin} />);
+  return (!user && <LoginForm handleLogin={handleLogin} />);
 };
 
-const LoggedInUserForm = ({ user, handleLogout }) => (
-  <div>
-    <p>{user.name} logged in</p>
-    <button type="button" onClick={handleLogout}>
-      logout
-        </button>
-  </div>
-)
+
 
 const LoginForm = ({ handleLogin }) => {
   const [username, resetUsername] = useField("text")
@@ -76,6 +56,7 @@ const LoginForm = ({ handleLogin }) => {
 
   return (
     <div>
+      <h2>Login</h2>
       <form data-cy="login-form" id="login-form" onSubmit={(event) => onLogin(event, username, password)}>
         <div>
           Username:

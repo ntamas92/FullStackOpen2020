@@ -11,18 +11,29 @@ import AddNewBlog from "./components/AddNewBlog";
 import Togglable from "./components/utils/Togglable";
 import Notification from "./components/Notification";
 import UserDetails from "./components/UserDetails";
+import Menu from "./components/Menu";
 
 import blogsActions from "./state/blogs/blogsActions"
 import usersActions from "./state/users/usersActions";
 import BlogDetails from "./components/BlogDetails";
+import userActions from "./state/user/userActions";
 
 const App = () => {
   const dispatch = useDispatch()
 
   const blogs = useSelector(store => store.blogs)
   const user = useSelector(store => store.user)
-
   const newBlogRef = useRef();
+
+  useEffect(() => {
+    const storedUser = window.localStorage.getItem("loggedInUser");
+    console.log("storeduser", storedUser)
+    if (storedUser) {
+      dispatch(userActions.setUser(JSON.parse(storedUser)))
+    }
+  }, [dispatch]);
+
+  console.log(user)
 
   useEffect(() => {
     if (user) {
@@ -31,14 +42,11 @@ const App = () => {
     }
   }, [user, dispatch]);
 
-  return (
-    <div>
-      <Notification />
+  const LoggedInUserView = () => {
+    return (
+      <>
+        <Menu />
 
-      <h2>Login</h2>
-      <Login />
-
-      {user && (
         <Switch>
           <Route path="/users/:id">
             <h2>User details</h2>
@@ -52,7 +60,6 @@ const App = () => {
             <h2>Blogs</h2>
             <BlogDetails />
           </Route>
-
           <Route path="/">
             <div className="blogs">
               <Togglable buttonLabel="Create new blog" ref={newBlogRef}>
@@ -68,8 +75,16 @@ const App = () => {
             </div>
           </Route>
         </Switch>
-      )}
-    </div>
+      </>
+    )
+  }
+
+  return (
+    <div>
+      <Notification />
+
+      {user ? <LoggedInUserView /> : <Login />}
+    </div >
   );
 };
 
