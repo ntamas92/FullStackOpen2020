@@ -8,6 +8,7 @@ import { setExpiringMessage } from "../state/notification/notificationActions"
 import userActions from "../state/user/userActions"
 import { notificationType } from "./Notification";
 import { useHistory } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -33,13 +34,11 @@ const Login = () => {
   };
 
   const showNotification = (message, notificationType) => {
-    dispatch(setExpiringMessage({ message, notificationType }, 5000))
+    dispatch(setExpiringMessage({ message, type: notificationType }, 5000))
   }
 
   return (!user && <LoginForm handleLogin={handleLogin} />);
 };
-
-
 
 const LoginForm = ({ handleLogin }) => {
   const [username, resetUsername] = useField("text")
@@ -58,15 +57,13 @@ const LoginForm = ({ handleLogin }) => {
     <div>
       <h2>Login</h2>
       <form data-cy="login-form" id="login-form" onSubmit={(event) => onLogin(event, username, password)}>
-        <div>
-          Username:
-          <input {...username} />
+        <div className="form-group">
+          <label>Username:</label>
+          <input type="text" name="username" className="form-control" {...username} />
+          <label>Password:</label>
+          <input type="password" name="password" className="form-control" {...password} />
+          <button variant="primary" type="submit" className="btn btn-primary">Login</button>
         </div>
-        <div>
-          Password:
-          <input {...password} />
-        </div>
-        <button type="submit">Login</button>
       </form>
     </div>
   )

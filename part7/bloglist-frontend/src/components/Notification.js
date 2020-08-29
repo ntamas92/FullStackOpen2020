@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Alert } from "react-bootstrap"
 
 export const notificationType = {
   INFO: "info",
@@ -14,17 +15,10 @@ const Notification = () => {
 
   const { message, type } = notification
 
-  if (type === notificationType.ERROR) {
-    return (
-      <div className="notificationBar">
-        <div className="errorNotification">{message}</div>
-      </div>
-    );
-  }
-
+  const success = type === notificationType.ERROR ? "danger" : "success"
   return (
-    <div className="notificationBar">
-      <div className="infoNotification">{message}</div>
+    <div className="container">
+      <Alert variant={success}>{message}</Alert>
     </div>
   );
 };

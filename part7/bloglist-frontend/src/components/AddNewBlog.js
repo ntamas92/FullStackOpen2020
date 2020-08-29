@@ -21,39 +21,38 @@ const AddNewBlog = ({ newBlogToggleRef }) => {
   };
 
   const showNotification = (message, notificationType) => {
-    dispatch(setExpiringMessage({ message, notificationType }, 5000))
+    dispatch(setExpiringMessage({ message, type: notificationType }, 5000))
   };
 
   const [blogDetails, setBlogDetails] = useState(defaultBlogDetails);
 
   return (
     <div>
-      <form id="addNewBlogForm" onSubmit={handleAddNewBlog}>
-        <div>
-          title:{" "}
+      <form data-cy="login-form" id="login-form" onSubmit={handleAddNewBlog}>
+        <div className="form-group">
+          <label>Title:</label>
           <input
             type="text"
             id="title"
+            className="form-control"
             value={blogDetails.title}
             onChange={({ target }) => setBlogDetails({ ...blogDetails, title: target.value })}></input>
-        </div>
-        <div>
-          author:{" "}
+          <label>Author:</label>
           <input
             type="text"
             id="author"
+            className="form-control"
             value={blogDetails.author}
             onChange={({ target }) => setBlogDetails({ ...blogDetails, author: target.value })}></input>
-        </div>
-        <div>
-          url:{" "}
+          <label>Url:</label>
           <input
             type="text"
             id="url"
+            className="form-control"
             value={blogDetails.url}
             onChange={({ target }) => setBlogDetails({ ...blogDetails, url: target.value })}></input>
+          <button variant="primary" type="submit" className="btn btn-primary">Create</button>
         </div>
-        <button id="submitCreateBlog" type="submit">create</button>
       </form>
     </div>
   );

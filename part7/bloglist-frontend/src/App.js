@@ -27,7 +27,6 @@ const App = () => {
 
   useEffect(() => {
     const storedUser = window.localStorage.getItem("loggedInUser");
-    console.log("storeduser", storedUser)
     if (storedUser) {
       dispatch(userActions.setUser(JSON.parse(storedUser)))
     }
@@ -49,29 +48,28 @@ const App = () => {
 
         <Switch>
           <Route path="/users/:id">
-            <h2>User details</h2>
             <UserDetails />
           </Route>
           <Route path="/users">
-            <h2>Users</h2>
             <Users />
           </Route>
           <Route path="/blogs/:id">
-            <h2>Blogs</h2>
             <BlogDetails />
           </Route>
           <Route path="/">
             <div className="blogs">
-              <Togglable buttonLabel="Create new blog" ref={newBlogRef}>
+              <Togglable buttonLabel="Create new blog" ref={newBlogRef} >
                 <h2>Create new blog</h2>
                 <AddNewBlog newBlogToggleRef={newBlogRef} />
               </Togglable>
 
               <h2>Blogs</h2>
-              {blogs
-                .filter((blog) => blog)
-                .sort((a, b) => b.likes - a.likes)
-                .map((blog) => <Blog key={blog.id} blog={blog} />)}
+              <div className="list-group">
+                {blogs
+                  .filter((blog) => blog)
+                  .sort((a, b) => b.likes - a.likes)
+                  .map((blog) => <Blog key={blog.id} blog={blog} />)}
+              </div>
             </div>
           </Route>
         </Switch>

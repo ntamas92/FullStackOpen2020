@@ -33,18 +33,18 @@ const BlogDetails = () => {
   }
 
   return (
-    <div className="blog-details">
-      <div>
-        <div>{blog.title} <br /></div>
-        <div><a href={blog.url}>{blog.url}</a></div>
-        <div>likes: {blog.likes}{" "}
-          <button id="likeButton" type="button" onClick={() => handleLikeClicked(blog)}>
+    <div className="card">
+      <div className="card-body">
+        <h5 className="card-title">{blog.title} </h5>
+        <h6 className="card-subtitle mb-2 text-muted">Added by: {blog.author}</h6>
+        <p className="card-text">likes: {blog.likes}{" "}
+          <button id="likeButton" type="button" className="btn btn-primary" onClick={() => handleLikeClicked(blog)}>
             like
         </button>{" "}
-        </div>
-        <div>Added by: {blog.author}</div>
+        </p>
+        <div><a href={blog.url}>{blog.url}</a></div>
         <div>
-          <button id="removeBlogButton" type="button" onClick={() => window.confirm(`Remove ${blog.title} by ${blog.author}?`) && handleRemoveBlog(blog)}>
+          <button id="removeBlogButton" type="button" className="btn btn-warning" onClick={() => window.confirm(`Remove ${blog.title} by ${blog.author}?`) && handleRemoveBlog(blog)}>
             remove
           </button>
         </div>
@@ -53,8 +53,8 @@ const BlogDetails = () => {
       <div className="comments">
         <h2>Comments</h2>
 
-        <input {...commentField} />
-        <button type="button" onClick={handleAddComment} >Add comment</button>
+        <input {...commentField} className="form-control" />
+        <button type="button" className="btn btn-secondary"  onClick={handleAddComment} >Add comment</button>
 
         <ul>
           {blog.comments.map((x, ind) => <li key={ind}>{x.text}</li>)}

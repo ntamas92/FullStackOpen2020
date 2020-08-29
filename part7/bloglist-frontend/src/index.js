@@ -19,7 +19,9 @@ console.log("index")
 ReactDOM.render(
   <Router>
     <Provider store={store}>
-      <App />
+      <div className="container">
+        <App />
+      </div>
     </Provider>
   </Router>
   ,
