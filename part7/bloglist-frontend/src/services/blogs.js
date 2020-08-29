@@ -12,7 +12,12 @@ const addNewBlog = async (newBlog, credentials) => handleException(async () => {
 })
 
 const incrementLikes = async (blog, credentials) => handleException(async () => {
-  const response = await axios.put(baseUrl + "/" + blog.id, { ...blog, likes:blog.likes + 1 }, getAuthorizationHeader(credentials))
+  const response = await axios.put(baseUrl + "/" + blog.id, { ...blog, likes: blog.likes + 1 }, getAuthorizationHeader(credentials))
+  return response.data
+})
+
+const addComment = async (blog, comment, credentials) => handleException(async () => {
+  const response = await axios.post(`${baseUrl}/${blog.id}/comments`, comment, getAuthorizationHeader(credentials))
   return response.data
 })
 
@@ -31,11 +36,11 @@ const getAuthorizationHeader = (credentials) => {
 }
 
 const handleException = async action => {
-  try {
+  // try {
     return await action()
-  } catch (exception) {
-    console.log(exception)
-  }
+  // } catch (exception) {
+  //   console.log(exception)
+  // }
 }
 
-export default { getAll, addNewBlog, removeBlog, incrementLikes }
+export default { getAll, addNewBlog, removeBlog, incrementLikes, addComment }

@@ -2,11 +2,14 @@ import React from "react"
 import { useParams, useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import blogsActions from "../state/blogs/blogsActions";
+import { useField } from "../hooks/useField"
 
 const BlogDetails = () => {
   const { id } = useParams()
   const blogs = useSelector(store => store.blogs)
   const blog = blogs.find(x => x.id === id)
+
+  const [commentField, resetCommentField] = useField("text")
 
   const dispatch = useDispatch()
   const history = useHistory()
@@ -19,6 +22,11 @@ const BlogDetails = () => {
     dispatch(blogsActions.removeBlog(blog));
     history.replace("/")
   };
+
+  const handleAddComment = async () => {
+    dispatch(blogsActions.addComment(blog, { text: commentField.value }))
+    resetCommentField()
+  }
 
   if (!blog) {
     return null
@@ -40,6 +48,17 @@ const BlogDetails = () => {
             remove
           </button>
         </div>
+      </div>
+
+      <div className="comments">
+        <h2>Comments</h2>
+
+        <input {...commentField} />
+        <button type="button" onClick={handleAddComment} >Add comment</button>
+
+        <ul>
+          {blog.comments.map((x, ind) => <li key={ind}>{x.text}</li>)}
+        </ul>
       </div>
     </div>
   )

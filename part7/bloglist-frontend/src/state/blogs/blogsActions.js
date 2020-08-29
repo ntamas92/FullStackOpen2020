@@ -24,9 +24,15 @@ const incrementLikesOnBlog = blog => async (dispatch, getState) => {
   dispatch({ type: blogActionTypes.MODIFY_BLOG, data: updatedBlog })
 }
 
+const addComment = (blog, comment) => async (dispatch, getState) => {
+  const updatedCommentList = await blogService.addComment(blog, comment, extractUserToken(getState))
+  console.log(updatedCommentList)
+  dispatch({ type: blogActionTypes.MODIFY_BLOG, data: { ...blog, comments: updatedCommentList } })
+}
+
 const extractUserToken = (getState) => {
   const user = getState().user
   return user.token
 }
 
-export default { initializeBlogs, addBlog, removeBlog, incrementLikesOnBlog }
+export default { initializeBlogs, addBlog, removeBlog, incrementLikesOnBlog, addComment }
