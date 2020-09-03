@@ -1,11 +1,15 @@
 import express from "express";
-const app = express()
+import cors from "cors";
 
-app.get("/ping", (_req, res) => {
+const app = express()
+app.use(cors)
+
+
+app.get("/api/ping", (_req, res) => {
   res.send("pong").end()
 })
 
-const PORT = 3003
+const PORT = 3001
 
 app.listen(PORT, () => {
   console.log(`App now listening at ${PORT}`)
