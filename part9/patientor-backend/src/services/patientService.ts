@@ -1,16 +1,23 @@
-import patientData from '../data/patients.json'
-import { PublicPatientData } from "../types/patientTypes"
+import patientData from '../data/patients'
+import { PublicPatientData, NewPatientData, PatientData } from "../types/patientTypes"
 
 const getEntries = (): Array<PublicPatientData> => {
-  return patientData.map(x => {
-    const { ssn, ...rest } = x
-    return { ...rest, dateOfBirth: new Date(rest.dateOfBirth) }}
-  );
+  return patientData.map(convertToPublic);
 };
 
-const addEntry = (_entry: PublicPatientData) => {
-  return null;
+const addEntry = (entry: NewPatientData) : PublicPatientData => {
+  const id = Math.random() * 10000
+
+  const newEntry = { ...entry, id: id.toString() }
+  patientData.push(newEntry)
+
+  return convertToPublic(newEntry)
 };
+
+const convertToPublic = (entry: PatientData): PublicPatientData => {
+  const { ssn, ...publicData } = entry
+  return publicData
+}
 
 export default {
   getEntries,
