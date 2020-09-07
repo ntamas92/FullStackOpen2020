@@ -8,6 +8,10 @@ router.get('/', (_req, res) => {
   res.json(patientService.getEntries())
 })
 
+router.get('/:id', (req, res) => {
+  res.json(patientService.getDetails(req.params.id))
+})
+
 router.post('/', (req, res) => {
   const patientData: any = req.body
   console.log(req.body)

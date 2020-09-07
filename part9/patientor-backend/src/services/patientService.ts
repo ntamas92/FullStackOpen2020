@@ -5,7 +5,11 @@ const getEntries = (): Array<PublicPatientData> => {
   return patientData.map(convertToPublic);
 };
 
-const addEntry = (entry: NewPatientData) : PublicPatientData => {
+const getDetails = (patientId: string): PatientData | undefined => {
+  return patientData.find(x => x.id === patientId)
+};
+
+const addEntry = (entry: NewPatientData): PublicPatientData => {
   const id = Math.random() * 10000
 
   const newEntry = { ...entry, id: id.toString() }
@@ -21,5 +25,6 @@ const convertToPublic = (entry: PatientData): PublicPatientData => {
 
 export default {
   getEntries,
+  getDetails,
   addEntry
 };

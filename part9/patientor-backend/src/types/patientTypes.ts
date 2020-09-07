@@ -1,4 +1,5 @@
 import { isString, parseDate, parseEnum } from "../utils/typeValidator"
+import { Entry } from "./entryTypes"
 
 export enum Gender {
   Male = 'male',
@@ -6,16 +7,18 @@ export enum Gender {
   Other = 'other',
 }
 
+
 export interface PatientData {
   id: string,
   name: string,
   dateOfBirth: Date,
   ssn: string,
   gender: Gender,
-  occupation: string
+  occupation: string,
+  entries: Entry[]
 }
 
-export type PublicPatientData = Omit<PatientData, "ssn">
+export type PublicPatientData = Omit<PatientData, "ssn" | "entries">
 
 export type NewPatientData = Omit<PatientData, "id">
 
@@ -39,7 +42,7 @@ export const parsePatientData = (patientData: any): NewPatientData => {
   const occupation = patientData.occupation
 
   return {
-    name, dateOfBirth, ssn, gender, occupation
+    name, dateOfBirth, ssn, gender, occupation, entries: []
   }
 }
 
