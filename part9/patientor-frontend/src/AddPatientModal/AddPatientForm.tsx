@@ -2,8 +2,14 @@ import React from "react";
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { TextField, SelectField, GenderOption } from "./FormField";
+import { SelectField, TextField, Props } from "../forms/FormField";
 import { Gender, Patient } from "../types";
+
+
+export type GenderOption = {
+  value: Gender;
+  label: string;
+};
 
 /*
  * use type Patient, but omit id and entries,
@@ -11,18 +17,13 @@ import { Gender, Patient } from "../types";
  */
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
-interface Props {
-  onSubmit: (values: PatientFormValues) => void;
-  onCancel: () => void;
-}
-
 const genderOptions: GenderOption[] = [
   { value: Gender.Male, label: "Male" },
   { value: Gender.Female, label: "Female" },
   { value: Gender.Other, label: "Other" }
 ];
 
-export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const AddPatientForm: React.FC<Props<PatientFormValues>> = ({ onSubmit, onCancel }) => {
   return (
     <Formik
       initialValues={{
@@ -32,7 +33,7 @@ export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         occupation: "",
         gender: Gender.Other
       }}
-      onSubmit={onSubmit}
+      onSubmit={(values) => onSubmit(values)}
       validate={values => {
         const requiredError = "Field is required";
         const errors: { [field: string]: string } = {};
@@ -78,7 +79,7 @@ export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               name="occupation"
               component={TextField}
             />
-            <SelectField
+            <SelectField<Gender>
               label="Gender"
               name="gender"
               options={genderOptions}

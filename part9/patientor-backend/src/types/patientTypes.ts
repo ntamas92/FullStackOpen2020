@@ -1,5 +1,5 @@
-import { isString, parseDate, parseEnum } from "../utils/typeValidator"
-import { Entry } from "./entryTypes"
+import { parseString, parseDate, parseEnum } from "../utils/typeValidator";
+import { Entry } from "./entryTypes";
 
 export enum Gender {
   Male = 'male',
@@ -18,31 +18,23 @@ export interface PatientData {
   entries: Entry[]
 }
 
-export type PublicPatientData = Omit<PatientData, "ssn" | "entries">
+export type PublicPatientData = Omit<PatientData, "ssn" | "entries">;
 
-export type NewPatientData = Omit<PatientData, "id">
+export type NewPatientData = Omit<PatientData, "id">;
 
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 export const parsePatientData = (patientData: any): NewPatientData => {
-  if (!isString(patientData.name))
-    throw Error("name is missing.")
 
-  const name = patientData.name
-  const dateOfBirth = parseDate(patientData.dateOfBirth)
+  const name = parseString(patientData.name);
+  const dateOfBirth = parseDate(patientData.dateOfBirth);
+  const ssn = parseString(patientData.ssn);
 
-  if (!isString(patientData.ssn))
-    throw Error("ssn is missing.")
+  const gender = parseEnum<Gender>(Gender, patientData.gender);
 
-  const ssn = patientData.ssn
-
-  const gender = parseEnum<Gender>(Gender, patientData.gender)
-
-  if (!isString(patientData.occupation))
-    throw Error("occupation is missing.")
-
-  const occupation = patientData.occupation
+  const occupation = parseString(patientData.occupation);
 
   return {
     name, dateOfBirth, ssn, gender, occupation, entries: []
-  }
-}
+  };
+};
 

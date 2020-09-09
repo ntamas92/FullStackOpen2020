@@ -66,9 +66,13 @@ const PatientListPage: React.FC = () => {
           ))}
         </Table.Body>
       </Table>
+      
       <AddPatientModal
+        header="Add a new patient"
         modalOpen={modalOpen}
         onSubmit={submitNewPatient}
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onCancel={() => {}}
         error={error}
         onClose={closeModal}
       />

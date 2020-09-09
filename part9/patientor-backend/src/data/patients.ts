@@ -1,4 +1,4 @@
-import { PatientData, Gender } from "../types/patientTypes"
+import { PatientData, Gender } from "../types/patientTypes";
 
 const patientData: PatientData[] = [
     {
@@ -112,4 +112,4 @@ const patientData: PatientData[] = [
     },
 ];
 
-export default patientData
+export default patientData;
