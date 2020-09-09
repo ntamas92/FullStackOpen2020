@@ -34,7 +34,28 @@ const AddEntryForm: React.FC<Props<EntryFormValues>> = ({ onSubmit, onCancel }) 
   const [{ diagnoses }] = useStateValue();
 
   return (<div>
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit}
+      validate={values => {
+        const requiredError = "Field is required";
+        const errors: { [field: string]: string } = {};
+        if (!values.description) {
+          errors.description = requiredError;
+        }
+        if (!values.date) {
+          errors.date = requiredError;
+        }
+        if (!values.diagnosisCodes) {
+          errors.diagnosisCodes = requiredError;
+        }
+        if (!values.specialist) {
+          errors.specialist = requiredError;
+        }
+        if(!Date.parse(values.date)){
+          errors.date = "Date is not in the correct format";
+        }
+        
+        return errors;
+      }}>
       {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">

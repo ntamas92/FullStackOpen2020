@@ -39,8 +39,6 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   }
 };
 
-
-
 const PatientDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -111,8 +109,6 @@ const PatientDetailsPage: React.FC = () => {
         onClose={closeModal}
       />
     </div>
-
-
   );
 };
 
