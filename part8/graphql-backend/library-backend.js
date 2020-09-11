@@ -84,6 +84,13 @@ let books = [
   },
 ]
 
+const allAuthors = () => authors.map(author => {
+  const booksOfAuthor = books.filter(book => book.author === author.name)
+  return { ...author, books: booksOfAuthor, bookCount: booksOfAuthor.length }
+})
+
+
+
 const typeDefs = gql`
   type Book {
     title: String!,
@@ -138,10 +145,7 @@ const resolvers = {
 
       return filteredBooks
     },
-    allAuthors: () => authors.map(author => {
-      const booksOfAuthor = books.filter(book => book.author === author.name)
-      return { ...author, books: booksOfAuthor, bookCount: booksOfAuthor.length }
-    })
+    allAuthors: allAuthors
   },
   Mutation: {
     addBook: (_, args) => {
@@ -157,16 +161,16 @@ const resolvers = {
     },
     editAuthor: (_, args) => {
       const author = authors.find(x => x.name === args.name)
-
+      
       if(!author){
         return null
       }
 
-      if(args.setBornTo){
+      if(args.setBornTo !== null && args.setBornTo !== undefined){
         author.born = args.setBornTo
       }
 
-      return author
+      return allAuthors().find(x => x === author)
     }
   }
 }
