@@ -13,7 +13,7 @@ const Books = () => {
 
   const books = getAllBooks.data.allBooks
 
-  const genres = books.flatMap(book => book.genres)
+  const genres = [...new Set(books.flatMap(book => book.genres))]
   
   const filteredBooks = selectedGenre ? books.filter(x => x.genres.includes(selectedGenre)) : books
 
