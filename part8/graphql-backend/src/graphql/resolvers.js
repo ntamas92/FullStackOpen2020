@@ -1,15 +1,11 @@
-const { gql, UserInputError, AuthenticationError } = require('apollo-server')
+const { gql, UserInputError, AuthenticationError, PubSub } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const jwt = require("jsonwebtoken")
 const Author = require("../models/author")
 const Book = require("../models/book")
 const User = require("../models/user")
 require('dotenv').config()
-
-/*
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
-*/
+const pubSub = new PubSub()
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -30,7 +26,7 @@ const resolvers = {
     allBooks: async (_, args) => {
       let filteredBooks = await Book.find({}).populate("author")
 
-      filteredBooks = filteredBooks.map(book => ({...book.toObject(), author:book.author.name}))
+      filteredBooks = filteredBooks.map(book => ({ ...book.toObject(), author: book.author.name }))
 
       if (args.author) {
         filteredBooks = filteredBooks.filter(book => book.author === args.author)
@@ -47,7 +43,7 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (_, args, context) => {
-      if(!context.currentUser) {
+      if (!context.currentUser) {
         throw new AuthenticationError("not authenticated")
       }
 
@@ -60,7 +56,7 @@ const resolvers = {
         author = await author.save()
       }
 
-      const book = new Book({ ...bookInput, author: author._id })
+      let book = new Book({ ...bookInput, author: author._id })
 
       try {
         await book.save()
@@ -70,10 +66,14 @@ const resolvers = {
         })
       }
 
-      return book
+      const createdBook = {...book.toObject(), author: author.name}
+
+      pubSub.publish("BOOK_ADDED", { bookAdded: createdBook })
+
+      return createdBook
     },
     editAuthor: async (_, args, context) => {
-      if(!context.currentUser) {
+      if (!context.currentUser) {
         throw new AuthenticationError("not authenticated")
       }
 
@@ -112,7 +112,7 @@ const resolvers = {
       return newUser
     },
     editUser: async (_, args) => {
-      if(!context.currentUser) {
+      if (!context.currentUser) {
         throw new AuthenticationError("not authenticated")
       }
 
@@ -122,7 +122,7 @@ const resolvers = {
         throw new UserInputError("User does not exist", { invalidArgs: args.username })
       }
 
-      if(args.setFavouriteGenre){
+      if (args.setFavouriteGenre) {
         user.favouriteGenre = args.setFavouriteGenre
       }
 
@@ -141,9 +141,17 @@ const resolvers = {
         username: user.username,
         id: user._id,
       }
-  
+
       return { value: jwt.sign(userForToken, JWT_SECRET) }
     }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubSub.asyncIterator(['BOOK_ADDED'])
+    },
+  },
+  Book: {
+    id: (root) => root._id
   }
 }
 

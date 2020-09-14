@@ -6,7 +6,7 @@ import { ALL_AUTHORS } from '../queries/authorQueries'
 const initialBookState = {
   title: '',
   author: '',
-  published: null,
+  published: 0,
   genre: '',
   genres: []
 }
