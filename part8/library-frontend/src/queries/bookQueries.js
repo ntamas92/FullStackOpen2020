@@ -6,6 +6,7 @@ query allBooks {
     title
     author
     published
+    genres
   }
 }
 `

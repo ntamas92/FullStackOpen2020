@@ -14,7 +14,6 @@ const SetBirthYearForm = ({ authors }) => {
   const submitSetBirthYear = event => {
     event.preventDefault()
 
-    console.log(name)
     setBirthYearRequest({variables: {name, setBornTo:birthYear }})
     setName(authors[0].name)
     setBirthYear(0)
@@ -34,12 +33,8 @@ const SetBirthYearForm = ({ authors }) => {
   )
 }
 
-const Authors = (props) => {
+const Authors = () => {
   const getAuthorResult = useQuery(ALL_AUTHORS)
-
-  if (!props.show) {
-    return null
-  }
 
   if (getAuthorResult.loading) {
     return <div>Loading...</div>

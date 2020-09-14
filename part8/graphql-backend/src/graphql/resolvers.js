@@ -28,7 +28,9 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (_, args) => {
-      let filteredBooks = await Book.find({})
+      let filteredBooks = await Book.find({}).populate("author")
+
+      filteredBooks = filteredBooks.map(book => ({...book.toObject(), author:book.author.name}))
 
       if (args.author) {
         filteredBooks = filteredBooks.filter(book => book.author === args.author)
@@ -45,7 +47,6 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (_, args, context) => {
-
       if(!context.currentUser) {
         throw new AuthenticationError("not authenticated")
       }
