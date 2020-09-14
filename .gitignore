@@ -1,3 +1,4 @@
 /Examples
 **/node_modules
 **/build
+**/.env
