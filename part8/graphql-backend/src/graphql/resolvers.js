@@ -111,6 +111,25 @@ const resolvers = {
 
       return newUser
     },
+    editUser: async (_, args) => {
+      if(!context.currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
+
+      const user = await User.findOne({ username: args.username })
+
+      if (!user) {
+        throw new UserInputError("User does not exist", { invalidArgs: args.username })
+      }
+
+      if(args.setFavouriteGenre){
+        user.favouriteGenre = args.setFavouriteGenre
+      }
+
+
+      await user.save()
+      return user
+    },
     login: async (_, args) => {
       const user = await User.findOne({ username: args.username })
 

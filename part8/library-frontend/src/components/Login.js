@@ -15,9 +15,7 @@ const Login = ({ setToken, setError }) => {
   useEffect(() => {
     if(loginResult.data){
       const token = loginResult.data.login.value
-      console.log(token)
       setToken(token)
-      localStorage.setItem('user-token', token)
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

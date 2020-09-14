@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
-import { ALL_AUTHORS, EDIT_AUTHOR,  } from '../queries/authorQueries'
+import { ALL_AUTHORS, EDIT_AUTHOR, } from '../queries/authorQueries'
 
 const SetBirthYearForm = ({ authors }) => {
   const [name, setName] = useState(authors[0].name)
@@ -14,7 +14,7 @@ const SetBirthYearForm = ({ authors }) => {
   const submitSetBirthYear = event => {
     event.preventDefault()
 
-    setBirthYearRequest({variables: {name, setBornTo:birthYear }})
+    setBirthYearRequest({ variables: { name, setBornTo: birthYear } })
     setName(authors[0].name)
     setBirthYear(0)
   }
@@ -24,7 +24,7 @@ const SetBirthYearForm = ({ authors }) => {
       <h3>Set Birth year for author</h3>
       <form onSubmit={submitSetBirthYear}>
         <select value={name} onChange={evt => setName(evt.target.value)}>
-          {authors.map(x => <option value={x.name} label={x.name}/>)}
+          {authors.map(x => <option value={x.name} label={x.name} />)}
         </select>
         <input type="number" value={birthYear} onChange={evt => setBirthYear(Number(evt.target.value))} />
         <button type="submit">Set birth year</button>
@@ -38,6 +38,10 @@ const Authors = () => {
 
   if (getAuthorResult.loading) {
     return <div>Loading...</div>
+  }
+
+  if (getAuthorResult.error) {
+    return <div>Error during fetching data: {getAuthorResult.error.toString()}</div>
   }
 
   const authors = getAuthorResult.data.allAuthors

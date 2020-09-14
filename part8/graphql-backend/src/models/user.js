@@ -6,6 +6,9 @@ const schema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  favouriteGenre: {
+    type:String
+  },
   // passwordHash: {
   // }
 })
